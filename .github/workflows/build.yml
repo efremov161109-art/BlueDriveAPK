@@ -1,0 +1,37 @@
+name: Build APK from ZIP
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unpack ZIP archive
+        run: |
+          unzip -o BlueDriveLauncher_source_v1.1.zip -d unpacked_project
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Debug APK
+        run: |
+          cd unpacked_project/* || cd unpacked_project
+          gradle :app:assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: BlueDriveLauncher-Ready-APK
+          path: '**/*.apk'
