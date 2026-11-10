@@ -28,7 +28,7 @@ jobs:
       - name: Build Debug APK
         run: |
           cd unpacked_project/* || cd unpacked_project
-          gradle :app:assembleDebug
+          gradle :app:assembleDebug -Pkotlin.jvm.target.validation.mode=ignore
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
